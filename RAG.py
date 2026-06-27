@@ -14,18 +14,29 @@ key = os.getenv("OPENAI_API_KEY")
 llm = ChatOpenAI(model="gpt-4.1-mini",api_key=key)
 worker=ChatOpenAI(model="gpt-4.1-mini",api_key=key)
 
-pdf = ["sample1.pdf", "sample2.pdf"]
-doc = []
-for i in pdf:
-    loader = PyPDFLoader(i)
-    doc.extend(loader.load())
+# RAG.py
+vectorstores = None  # lazy init
+retriever = None
 
-splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-docs = splitter.split_documents(doc)
-embedding = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-vectorstores = FAISS.from_documents(docs, embedding)
+def _init_rag():
+    global vectorstores, retriever
+    if retriever is not None:
+        return
+    pdf = ["docs/sample1.pdf", "docs/sample2.pdf"]
+    doc = []
+    for i in pdf:
+        if os.path.exists(i):          # guard: skip missing files
+            loader = PyPDFLoader(i)
+            doc.extend(loader.load())
+    if not doc:
+        retriever = None
+        return
+    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    docs = splitter.split_documents(doc)
+    embedding = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    vectorstores = FAISS.from_documents(docs, embedding)
+    retriever = vectorstores.as_retriever(search_type="mmr", search_kwargs={"k": 5})
 
-retriever = vectorstores.as_retriever(search_type="mmr", search_kwargs={"k": 5}) #retrieving top 5 chunks
 
 def is_required_rag(query): #decides if rag is required, else simple LLM answer
     prompt = f"""
@@ -123,7 +134,7 @@ def re_ranking_agent(query,docs):
     return final_docs
 
 def run_RAG(query,history):
-
+    _init_rag()
     new_query=re_write_query(query,history)
     history_text=""
     for i in history[-3:]:

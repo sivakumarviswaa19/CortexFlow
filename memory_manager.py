@@ -31,10 +31,19 @@ config={
     }
 }
 
-memory=Memory.from_config(config)
+memory = None
+
+def get_memory():
+    global memory
+    if memory is None:
+        memory = Memory.from_config(config)
+    return memory
+
+
 
 def retrieve_memory(query):
     """ Searches for relevant data from stored long term memory"""
+    memory=get_memory()
     mem_data = memory.search(
         query=query,
         filters={
@@ -48,7 +57,7 @@ def retrieve_memory(query):
 
 def store_memory(query,data):
     """Stores the responses"""
-
+    memory=get_memory()
     memory.add(
         messages=[
             {
