@@ -1,0 +1,41 @@
+# LLM & AI Framework
+langchain
+langchain-openai
+langchain-ollama
+langchain-huggingface
+langchain-community
+langchain-text-splitters
+langgraph
+
+# Vector Store
+faiss-cpu
+langchain-community
+
+# PDF Loader
+pypdf
+
+# Embeddings
+sentence-transformers
+
+# Memory
+mem0ai
+psycopg2-binary
+
+# MCP Integration
+mcp-use
+
+# Web Search
+duckduckgo-search
+
+# Math
+numexpr
+
+# API Server
+fastapi
+uvicorn
+pydantic
+
+# Env
+python-dotenv
+
+ddgs
