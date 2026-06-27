@@ -2,7 +2,7 @@
 
 from RAG import run_RAG
 from langchain_openai import ChatOpenAI
-from langchain_ollama import ChatOllama
+
 from langchain_community.tools import DuckDuckGoSearchRun
 from langgraph.graph import StateGraph, END
 from typing import List, TypedDict, Dict
@@ -29,7 +29,7 @@ key = os.getenv("OPENAI_API_KEY")
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 llm = ChatOpenAI(model="gpt-4.1-mini", api_key=key)
-worker = ChatOllama(model="qwen3:14b")
+worker = ChatOpenAI(model="gpt-4.1-mini", api_key=key)
 
 # mcp agent
 agent = MCPAgent(client=client, llm=worker)
