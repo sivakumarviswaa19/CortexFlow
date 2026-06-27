@@ -135,6 +135,8 @@ def re_ranking_agent(query,docs):
 
 def run_RAG(query,history):
     _init_rag()
+    if retriever is None:
+        return "No documents available.", ""
     new_query=re_write_query(query,history)
     history_text=""
     for i in history[-3:]:
