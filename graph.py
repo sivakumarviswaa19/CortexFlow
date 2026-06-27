@@ -12,11 +12,10 @@ import asyncio
 from memory_manager import *
 
 from dotenv import load_dotenv
-
 load_dotenv()
 
-from mcp_use import MCPAgent
-from mcp_client import client
+#from mcp_use import MCPAgent
+#from mcp_client import client
 
 import os
 import re
@@ -32,7 +31,7 @@ llm = ChatOpenAI(model="gpt-4.1-mini", api_key=key)
 worker = ChatOpenAI(model="gpt-4.1-mini", api_key=key)
 
 # mcp agent
-agent = MCPAgent(client=client, llm=worker)
+#agent = MCPAgent(client=client, llm=worker)
 
 search = DuckDuckGoSearchRun()
 
@@ -60,8 +59,9 @@ def coding_agent(query):
     return worker.invoke(prompt).content
 
 
-# --- NOTES AGENT ---
-def filesystem_agent(query):
+# --- NOTES AGENT --- ==> Temporarily disabled ( for deployment reasons)
+
+"""def filesystem_agent(query):
     read_flag = 0
     if any(word in query.lower() for word in [
         "read",
@@ -89,9 +89,7 @@ def filesystem_agent(query):
         return asyncio.run(sub())
     else:
         async def sub_main():
-            content = worker.invoke(f"""Understand this and only return the test or main message of the query,
-                                    Eg. if query is 'Save understood mcp in notes' then return 'understood mcp'
-                                    Given query: {query}""").content
+            content = worker.invoke(f"Understand this and only return the test or main message of the query,Eg. if query is 'Save understood mcp in notes' then return 'understood mcp'Given query: {query}").content
             await client.create_all_sessions()
             data = await sub()
             session = client.get_session("filesystem")
@@ -104,7 +102,7 @@ def filesystem_agent(query):
             )
             return result.content[0].text
 
-        return asyncio.run(sub_main())
+        return asyncio.run(sub_main())"""
 
 
 # --- SEARCH AGENT (RAW) ---
@@ -311,7 +309,7 @@ def executor_agent(state):
         return {"final": math_agent(query)}
 
     elif decision == "notes":
-        return {"final": filesystem_agent(query)}
+        return {"final": "Notes agent is temporarily disabled for deployment reasons."}
 
     elif decision == "coding":
         return {"final": coding_agent(query)}
