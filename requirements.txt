@@ -1,8 +1,7 @@
 # LLM & AI Framework
 langchain
 langchain-openai
-langchain-ollama
-langchain-huggingface
+
 langchain-community
 langchain-text-splitters
 langgraph
@@ -14,8 +13,6 @@ langchain-community
 # PDF Loader
 pypdf
 
-# Embeddings
-sentence-transformers
 
 # Memory
 mem0ai

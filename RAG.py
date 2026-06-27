@@ -1,5 +1,5 @@
-from langchain_openai import ChatOpenAI
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_openai import ChatOpenAI,OpenAIEmbeddings
+
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
@@ -33,7 +33,7 @@ def _init_rag():
         return
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     docs = splitter.split_documents(doc)
-    embedding = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    embedding = OpenAIEmbeddings(model="text-embedding-3-small", api_key=key)
     vectorstores = FAISS.from_documents(docs, embedding)
     retriever = vectorstores.as_retriever(search_type="mmr", search_kwargs={"k": 5})
 
